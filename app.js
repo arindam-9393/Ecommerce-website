@@ -5,7 +5,6 @@ const path = require("path");
 const ownersRouter=require('./routes/ownersRouter');
 const productsRouter=require('./routes/productRouter');
 const usersRouter=require('./routes/usersRouter');
-
 const db = require("./config/mongoose-connection");
 
 app.use(express.json());

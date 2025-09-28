@@ -36,10 +36,7 @@ const userSchema = new mongoose.Schema({
       ref: "Order",
     },
   ],
-  isAdmin: {
-    type: Boolean,
-    default: false,
-  },
+
 });
 
 module.exports = mongoose.model("User", userSchema);

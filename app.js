@@ -46,6 +46,9 @@ app.use("/owners", ownersRouter);
 app.use("/users", usersRouter);
 app.use("/products", productsRouter);
 
+// In app.js, near the top
+console.log(`Application is running in: ${process.env.NODE_ENV} mode.`);
+
 
 app.listen(3000, () => {
     console.log("Server started on port 3000.");

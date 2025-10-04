@@ -10,6 +10,10 @@ router.get("/", function (req, res) {
 
 router.post("/register", registerUser);
 
+router.get("/shop" , (req , res)=>{
+  res.render("shop");
+})
+
 router.post("/login" , loginUser);
 router.get('/logout' , logout);
 

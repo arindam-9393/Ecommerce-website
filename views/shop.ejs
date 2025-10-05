@@ -1,50 +1,224 @@
 <%- include('./partials/header') %>
-    <div class="w-full h-screen flex items-start px-20 py-20">
-        <div class="w-[25%] flex h-screen flex-col items-start">
-            <div class="flex items-center gap-2">
-                <h3>sort by</h3>
-                <form action="/shop">
-                    <select class="border-[1px] px-2 py-1" name="sortby" id="">
-                        <option value="popular">Popular</option>
-                        <option value="newest">Newest</option>
-                    </select>
-                </form>
+
+<!-- Remix Icons for cart -->
+<link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet">
+
+<style>
+/* ======================
+   SHOP PAGE STYLING
+====================== */
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-thumb {
+  background-color: #d1d5db;
+  border-radius: 10px;
+}
+
+/* Page layout */
+body {
+  background-color: #f9fafb;
+  font-family: 'Poppins', sans-serif;
+  color: #1f2937;
+}
+
+/* Product Card Styling */
+.w-72 {
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.w-72:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Cart Sidebar */
+.cart-summary {
+  background-color: #ffffff;
+  border-radius: 10px;
+  padding: 1rem;
+  border: 1px solid #e5e7eb;
+}
+
+.cart-summary h4 {
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+}
+
+.cart-summary img {
+  border: 1px solid #e5e7eb;
+}
+
+/* Dropdown & Filters */
+#sortby {
+  border-color: #d1d5db;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+#sortby:hover {
+  border-color: #9ca3af;
+}
+
+/* Category Links */
+a.block {
+  color: #374151;
+  font-size: 0.95rem;
+  transition: color 0.2s ease;
+}
+
+a.block:hover {
+  color: #111827;
+  text-decoration: underline;
+}
+
+/* Cart icon badge */
+.cart-link {
+  position: relative;
+  display: flex;
+  align-items: center;
+  color: #374151;
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+.cart-link:hover {
+  color: #000000;
+}
+
+.cart-link .cart-badge {
+  position: absolute;
+  top: -5px;
+  right: -10px;
+  background-color: #ef4444;
+  color: white;
+  font-size: 0.7rem;
+  padding: 1px 4px;
+  border-radius: 50%;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 1024px) {
+  .px-20 {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+  .w-\[25%\] {
+    width: 100%;
+    margin-bottom: 2rem;
+  }
+  .w-\[75%\] {
+    width: 100%;
+    padding-left: 0;
+  }
+  .flex {
+    flex-direction: column;
+  }
+}
+</style>
+
+<!-- ===================== HEADER CART ICON ===================== -->
+<!-- ===================== HEADER CART ICON ===================== -->
+<div class="fixed top-6 right-10 z-50">
+  <a href="/users/cart" class="cart-link">
+    <i class="ri-shopping-cart-2-line text-2xl"></i>
+    <% if (locals.user && user.cart && user.cart.length > 0) { %>
+      <span class="cart-badge"><%= user.cart.length %></span>
+    <% } %>
+  </a>
+</div>
+
+
+<!-- ===================== MAIN SHOP SECTION ===================== -->
+<div class="w-full min-h-screen flex items-start px-20 py-20">
+  <!-- Left Sidebar -->
+  <div class="w-[25%]">
+
+    <!-- My Cart Section -->
+    <div class="cart-summary mb-10">
+      <h4 class="font-semibold mb-2">My Cart</h4>
+      <% if (locals.user && user.cart && user.cart.length > 0) { %>
+        <div class="flex flex-col gap-3">
+          <% let total = 0; %>
+          <% user.cart.forEach(item => { %>
+            <% total += item.quantity * item.productId.price; %>
+            <div class="flex items-center gap-2 border-b pb-2">
+              <% if (item.productId.image) { %>
+                <img src="data:image/jpeg;base64,<%= item.productId.image.toString('base64') %>" class="w-10 h-10 object-cover rounded" alt="">
+              <% } else { %>
+                <img src="/images/placeholder.png" class="w-10 h-10 object-cover rounded" alt="">
+              <% } %>
+              <div>
+                <h5 class="text-sm leading-tight"><%= item.productId.name %></h5>
+                <p class="text-xs text-gray-500"><%= item.quantity %> x ₹<%= item.productId.price %></p>
+              </div>
             </div>
-            <div class="flex flex-col mt-20">
-                <a class="block w-fit mb-2" href="">New Collection</a>
-                <a class="block w-fit mb-2" href="">All Products</a>
-                <a class="block w-fit mb-2" href="">Discounted Products</a>
-            </div>
-            <div class="mt-32">
-                <a class="block w-fit mb-2" href="">Filter by :</a>
-                <a class="block w-fit mb-2" href="">Availability</a>
-                <a class="block w-fit mb-2" href="">Discount</a>
-            </div>
+          <% }) %>
+          <div class="mt-2">
+            <h5 class="font-semibold">Subtotal: ₹<%= total.toFixed(2) %></h5>
+            <a href="/users/cart" class="text-blue-500 hover:underline text-sm">View Full Cart</a>
+          </div>
         </div>
-        <div class="w-[75%] flex flex-col gap-5 h-screen">
-            <div class="flex items-start gap-5">
-                <% products.forEach(function(product){ %>
-                    <div class="w-60">
-                        <div class="w-full h-52 flex items-center justify-center bg-[<%= product.bgcolor %>]">
-                            <img class="h-[12rem]" src="data:image/jpeg;base64,<%= product.image.toString('base64') %>"
-                                alt="">
-                        </div>
-                        <div
-                            class="flex justify-between bg-[<%= product.panelcolor %>] items-center px-4 py-4 text-[<%= product.textcolor %>]">
-                            <div>
-                                <h3>
-                                    <%= product.name %>
-                                </h3>
-                                <h4>₹ <%= product.price %>
-                                </h4>
-                            </div>
-                            <a class="w-7 h-7 flex items-center justify-center rounded-full bg-white" href="">
-                                <i class="ri-add-line"></i>
-                            </a>
-                        </div>
-                    </div>
-                    <% }) %>
-            </div>
-        </div>
+      <% } else { %>
+        <p class="text-sm text-gray-500">Your cart is empty.</p>
+      <% } %>
     </div>
-    <%- include('./partials/footer') %>
+
+    <!-- Sort Section -->
+    <div class="flex items-center gap-2 mb-5">
+      <h3 class="font-medium">Sort by:</h3>
+      <form id="sortForm" action="/users/shop">
+        <select class="border-[1px] px-2 py-1 rounded" name="sortby" id="sortby">
+          <option value="popular">Popular</option>
+          <option value="newest">Newest</option>
+          <option value="price-low-high">Price: Low to High</option>
+          <option value="price-high-low">Price: High to Low</option>
+        </select>
+      </form>
+    </div>
+
+    <!-- Categories Section -->
+    <div class="flex flex-col mt-10">
+      <h4 class="font-semibold mb-2">Categories</h4>
+      <a class="block w-fit mb-2" href="/users/shop?filter=new">New Collection</a>
+      <a class="block w-fit mb-2" href="/users/shop">All Products</a>
+      <a class="block w-fit mb-2" href="/users/shop?filter=discounted">Discounted Products</a>
+    </div>
+  </div>
+
+  <!-- Products Section -->
+  <div class="w-[75%] pl-10">
+    <div class="flex flex-wrap items-start gap-5">
+      <% products.forEach(function(product){ %>
+        <div class="w-72 bg-white rounded-xl overflow-hidden shadow-sm">
+          <div class="w-full h-52 flex items-center justify-center bg-[<%= product.bgcolor || '#F0F0F0' %>]">
+            <% if (product.image) { %>
+              <img class="h-[12rem] object-cover" src="data:image/jpeg;base64,<%= product.image.toString('base64') %>" alt="<%= product.name %>">
+            <% } else { %>
+              <img class="h-[12rem] object-cover" src="/images/placeholder.png" alt="No image available">
+            <% } %>
+          </div>
+          <div class="flex justify-between items-center px-4 py-4 bg-[<%= product.panelcolor || '#FFFFFF' %>] text-[<%= product.textcolor || '#000000' %>]">
+            <div>
+              <h3 class="font-semibold"><%= product.name %></h3>
+              <h4>₹ <%= product.price %></h4>
+            </div>
+            <a class="w-8 h-8 flex items-center justify-center rounded-full bg-black text-white hover:bg-gray-800 transition" href="/users/cart/add/<%= product._id %>">
+              <i class="ri-add-line"></i>
+            </a>
+          </div>
+        </div>
+      <% }) %>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.getElementById('sortby').addEventListener('change', function() {
+    document.getElementById('sortForm').submit();
+  });
+</script>
+
+<%- include('./partials/footer') %>

@@ -15,6 +15,12 @@ const expressSession = require('express-session');
 const flash = require('connect-flash');
 require("dotenv").config();
 
+require('./models/user-model');
+require('./models/product-model'); 
+require('./models/admin-model');
+
+
+
 // Middleware
 app.use(
   expressSession({
@@ -29,6 +35,8 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 app.set("view engine", "ejs");
+
+
 
 // // vvvvvv DEBUGGING SECTION vvvvvv
 // // This will check your router variables before they are used

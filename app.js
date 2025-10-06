@@ -15,6 +15,30 @@ const expressSession = require('express-session');
 const flash = require('connect-flash');
 require("dotenv").config();
 
+// console.log('EMAIL_USER:', process.env.EMAIL_USER);
+// console.log('EMAIL_PASS:', process.env.EMAIL_PASS);
+// const nodemailer = require("nodemailer");
+
+
+// const transporter = nodemailer.createTransport({
+//   host: "smtp.gmail.com",
+//   port: 465,
+//   secure: true, // use SSL
+//   auth: {
+//     user: process.env.EMAIL_USER,
+//     pass: process.env.EMAIL_PASS,
+//   },
+// });
+
+// transporter.verify((error, success) => {
+//   if (error) {
+//     console.log("❌ Transporter error:", error);
+//   } else {
+//     console.log("✅ Server is ready to send emails!");
+//   }
+// });
+
+
 require('./models/user-model');
 require('./models/product-model'); 
 require('./models/admin-model');

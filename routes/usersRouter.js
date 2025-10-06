@@ -6,9 +6,104 @@ const isLoggedIn = require("../middlewares/isLoggedIn");
 const userModel = require('../models/user-model');
 const upload=require("../config/multer-config");
 
+const crypto = require('crypto');
+const nodemailer = require('nodemailer');
+const bcrypt = require('bcrypt');
+
+require("dotenv").config();
+
+// Temporary OTP store (in memory)
+let otpStore = {};
+
+// --- Create transporter ---
+const transporter = nodemailer.createTransport({
+  host: "smtp.gmail.com",
+  port: 465,
+  secure: true, // SSL
+  auth: {
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS,
+  },
+});
+
+// --- GET forgot password page ---
+router.get("/forgot-password", (req, res) => {
+  res.render("forgotPassword", { error: "", success: "" });
+});
+
+// --- POST send OTP ---
+router.post("/forgot-password", async (req, res) => {
+  try {
+    const { email } = req.body;
+    const user = await userModel.findOne({ email });
+
+    if (!user) {
+      return res.render("forgotPassword", {
+        error: "Email not found!",
+        success: "",
+      });
+    }
+
+    // Generate 6-digit OTP
+    const otp = Math.floor(100000 + Math.random() * 900000);
+    otpStore[email] = otp;
+
+    // Send OTP mail
+    await transporter.sendMail({
+      from: `"Password Reset" <${process.env.EMAIL_USER}>`,
+      to: email,
+      subject: "Password Reset OTP",
+      text: `Your OTP for password reset is: ${otp}`,
+    });
+
+    console.log("✅ OTP sent to:", email);
+
+    // Redirect to reset-password page after sending OTP
+    // Correct redirect using the router prefix
+res.redirect(`/users/reset-password?email=${email}&msg=otpsent`);
+
+  } catch (err) {
+    console.error("❌ Error sending OTP:", err);
+    res.status(500).send("Server Error");
+  }
+});
+
+// --- GET reset password page ---
+router.get("/reset-password", (req, res) => {
+  res.render("resetPassword", { 
+    error: "", 
+    email: req.query.email,
+    msg: req.query.msg || ""
+  });
+});
+
+// --- POST reset password ---
+router.post("/reset-password", async (req, res) => {
+  try {
+    const { email, otp, password } = req.body;
+
+    if (otpStore[email] != otp) {
+      return res.render("resetPassword", { error: "Invalid OTP", email, msg: "" });
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+    await userModel.findOneAndUpdate({ email }, { password: hashedPassword });
+
+    delete otpStore[email];
+
+    res.redirect("/"); // redirect to login after reset
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Server Error");
+  }
+});
+
+
 router.get("/", function (req, res) {
   res.send("hey it's working");
 });
+
+
 
 router.post("/register", registerUser);
 

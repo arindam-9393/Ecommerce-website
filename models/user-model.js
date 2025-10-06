@@ -30,6 +30,10 @@ const userSchema = new mongoose.Schema({
       },
     },
   ],
+  phone: { type: String },
+  address: { type: String },
+  profileImage: Buffer , // ← this is correct
+
   orders: [
     {
       type: mongoose.Schema.Types.ObjectId,

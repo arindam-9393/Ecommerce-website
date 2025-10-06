@@ -1,0 +1,123 @@
+<%- include('./partials/header') %>
+
+<link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet">
+
+<style>
+body {
+  background-color: #f9fafb;
+  font-family: 'Poppins', sans-serif;
+  color: #1f2937;
+  margin: 0;
+  padding: 0;
+}
+
+.product-container {
+  max-width: 1000px;
+  margin: 80px auto;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  overflow: hidden;
+  display: flex;
+  flex-wrap: wrap;
+  padding: 20px;
+}
+
+.product-image {
+  flex: 1;
+  min-width: 350px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.product-image img {
+  width: 100%;
+  max-width: 400px;
+  height: auto;
+  border-radius: 12px;
+  object-fit: cover;
+  border: 1px solid #e5e7eb;
+}
+
+.product-info {
+  flex: 1;
+  min-width: 300px;
+  padding: 20px 30px;
+}
+
+.product-info h2 {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #111827;
+  margin-bottom: 10px;
+}
+
+.product-info p {
+  color: #6b7280;
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+.price {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #16a34a;
+  margin: 20px 0;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background-color: #2563eb;
+  color: white;
+  font-weight: 500;
+  padding: 12px 18px;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: background 0.3s ease;
+}
+
+.btn:hover {
+  background-color: #1d4ed8;
+}
+
+.back-btn {
+  margin-top: 25px;
+  display: inline-block;
+  color: #374151;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.back-btn:hover {
+  text-decoration: underline;
+}
+</style>
+
+<div class="product-container">
+  <div class="product-image">
+    <% if (product.image) { %>
+      <img src="data:image/jpeg;base64,<%= product.image.toString('base64') %>" alt="<%= product.name %>">
+    <% } else { %>
+      <img src="/images/placeholder.png" alt="No Image Available">
+    <% } %>
+  </div>
+
+  <div class="product-info">
+    <h2><%= product.name %></h2>
+    <p><%= product.description || "No description available for this product." %></p>
+    <div class="price">₹ <%= product.price %></div>
+
+    <a href="/users/cart/add/<%= product._id %>" class="btn">
+      <i class="ri-shopping-cart-2-line"></i> Add to Cart
+    </a>
+
+    <br>
+    <a href="/users/shop" class="back-btn"><i class="ri-arrow-left-line"></i> Back to Shop</a>
+  </div>
+</div>
+
+<%- include('./partials/footer') %>

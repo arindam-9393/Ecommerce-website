@@ -1,97 +1,127 @@
 <%- include('./partials/header') %>
 
-<!-- Remix Icons for cart -->
+<!-- Remix Icons -->
 <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet">
 
 <style>
-/* ======================
-   SHOP PAGE STYLING
-====================== */
-
-/* Scrollbar styling */
-::-webkit-scrollbar {
-  width: 6px;
-}
-::-webkit-scrollbar-thumb {
-  background-color: #d1d5db;
-  border-radius: 10px;
-}
-
-/* Page layout */
+/* Global Styles */
 body {
   background-color: #f9fafb;
   font-family: 'Poppins', sans-serif;
   color: #1f2937;
+  margin: 0;
+  padding: 0;
 }
 
-/* Product Card Styling */
-.w-72 {
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
+/* Navbar */
+.navbar {
+  background: linear-gradient(90deg, #2563eb, #3b82f6);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.8rem 2rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
 }
 
-.w-72:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+.navbar .logo {
+  font-weight: 700;
+  font-size: 1.5rem;
+  letter-spacing: 0.5px;
 }
 
-/* Cart Sidebar */
-.cart-summary {
+.navbar .nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.navbar input[type="text"] {
+  padding: 6px 12px;
+  border-radius: 20px;
+  border: none;
+  outline: none;
+  width: 220px;
+  color: #111827;
   background-color: #ffffff;
-  border-radius: 10px;
-  padding: 1rem;
-  border: 1px solid #e5e7eb;
 }
 
-.cart-summary h4 {
-  font-size: 1.1rem;
-  margin-bottom: 0.5rem;
+.navbar input[type="text"]::placeholder {
+  color: #9ca3af;
 }
 
-.cart-summary img {
-  border: 1px solid #e5e7eb;
-}
-
-/* Dropdown & Filters */
-#sortby {
-  border-color: #d1d5db;
+.navbar form button {
+  padding: 6px 12px;
+  margin-left: 6px;
+  border: none;
+  border-radius: 20px;
+  background-color: #1d4ed8;
+  color: white;
   cursor: pointer;
-  transition: all 0.2s ease;
+  font-weight: 500;
+  transition: background 0.2s;
 }
 
-#sortby:hover {
-  border-color: #9ca3af;
+.navbar form button:hover {
+  background-color: #2563eb;
 }
 
-/* Category Links */
-a.block {
-  color: #374151;
-  font-size: 0.95rem;
+.navbar a {
+  color: white;
+  font-weight: 500;
+  text-decoration: none;
   transition: color 0.2s ease;
 }
 
-a.block:hover {
-  color: #111827;
-  text-decoration: underline;
+.navbar a:hover {
+  color: #e0e7ff;
 }
 
-/* Cart icon badge */
+/* Profile dropdown */
+.profile-dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.profile-dropdown-content {
+  display: none;
+  position: absolute;
+  right: 0;
+  background-color: white;
+  min-width: 150px;
+  box-shadow: 0px 4px 8px rgba(0,0,0,0.1);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.profile-dropdown-content a {
+  color: #1f2937;
+  padding: 10px 14px;
+  text-decoration: none;
+  display: block;
+  transition: background 0.2s;
+}
+
+.profile-dropdown-content a:hover {
+  background-color: #f3f4f6;
+}
+
+.profile-dropdown:hover .profile-dropdown-content {
+  display: block;
+}
+
+/* Cart Badge */
 .cart-link {
   position: relative;
-  display: flex;
-  align-items: center;
-  color: #374151;
-  font-weight: 500;
-  transition: color 0.3s ease;
-}
-
-.cart-link:hover {
-  color: #000000;
 }
 
 .cart-link .cart-badge {
   position: absolute;
-  top: -5px;
-  right: -10px;
+  top: -6px;
+  right: -8px;
   background-color: #ef4444;
   color: white;
   font-size: 0.7rem;
@@ -99,126 +129,167 @@ a.block:hover {
   border-radius: 50%;
 }
 
-/* Responsive Adjustments */
+/* Sidebar */
+.category-box {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+  transition: all 0.3s ease;
+}
+
+.category-box a {
+  display: block;
+  padding: 8px 12px;
+  margin-bottom: 6px;
+  border-radius: 6px;
+  color: #374151;
+  text-decoration: none;
+  font-size: 0.95rem;
+  transition: background 0.2s, color 0.2s;
+}
+
+.category-box a:hover {
+  background-color: #3b82f6;
+  color: white;
+}
+
+/* Products */
+.product-card {
+  width: 16rem;
+  background-color: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.06);
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.product-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+}
+
+.product-card img {
+  height: 12rem;
+  width: 100%;
+  object-fit: cover;
+}
+
+.product-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.8rem 1rem;
+}
+
+.product-info h3 {
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.product-info h4 {
+  font-size: 0.95rem;
+  color: #111;
+  font-weight: 500;
+}
+
+.add-btn {
+  width: 32px;
+  height: 32px;
+  background-color: #000;
+  border-radius: 50%;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+}
+
+.add-btn:hover {
+  background-color: #333;
+}
+
+/* Responsive */
 @media (max-width: 1024px) {
-  .px-20 {
-    padding-left: 1rem;
-    padding-right: 1rem;
+  .shop-layout {
+    flex-direction: column;
   }
-  .w-\[25%\] {
+  .sidebar {
     width: 100%;
     margin-bottom: 2rem;
   }
-  .w-\[75%\] {
+  .products {
     width: 100%;
-    padding-left: 0;
-  }
-  .flex {
-    flex-direction: column;
   }
 }
 </style>
 
-<!-- ===================== HEADER CART ICON ===================== -->
-<!-- ===================== HEADER CART ICON ===================== -->
-<div class="fixed top-6 right-10 z-50">
-  <a href="/users/cart" class="cart-link">
-    <i class="ri-shopping-cart-2-line text-2xl"></i>
-    <% if (locals.user && user.cart && user.cart.length > 0) { %>
-      <span class="cart-badge"><%= user.cart.length %></span>
-    <% } %>
-  </a>
+<!-- NAVBAR -->
+<div class="navbar">
+  <div class="logo">MyStore 🛍️</div>
+
+  <div class="nav-actions">
+    <form action="/users/shop" method="GET" style="display:flex; align-items:center;">
+      <input type="text" name="search" placeholder="Search products..." />
+      <button type="submit">Search</button>
+    </form>
+
+    <a href="/users/cart" class="cart-link">
+      <i class="ri-shopping-cart-2-line text-2xl"></i>
+      <% if (locals.user && user.cart && user.cart.length > 0) { %>
+        <span class="cart-badge"><%= user.cart.length %></span>
+      <% } %>
+    </a>
+
+    <div class="profile-dropdown">
+      <i class="ri-user-3-line text-2xl cursor-pointer"></i>
+      <div class="profile-dropdown-content">
+        <a href="/users/profile">My Profile</a>
+        <a href="/users/orders">My Orders</a>
+        <a href="/users/logout">Logout</a>
+      </div>
+    </div>
+  </div>
 </div>
 
+<!-- SHOP SECTION -->
+<div class="w-full min-h-screen flex items-start px-20 py-16 shop-layout">
 
-<!-- ===================== MAIN SHOP SECTION ===================== -->
-<div class="w-full min-h-screen flex items-start px-20 py-20">
-  <!-- Left Sidebar -->
-  <div class="w-[25%]">
-
-    <!-- My Cart Section -->
-    <div class="cart-summary mb-10">
-      <h4 class="font-semibold mb-2">My Cart</h4>
-      <% if (locals.user && user.cart && user.cart.length > 0) { %>
-        <div class="flex flex-col gap-3">
-          <% let total = 0; %>
-          <% user.cart.forEach(item => { %>
-            <% total += item.quantity * item.productId.price; %>
-            <div class="flex items-center gap-2 border-b pb-2">
-              <% if (item.productId.image) { %>
-                <img src="data:image/jpeg;base64,<%= item.productId.image.toString('base64') %>" class="w-10 h-10 object-cover rounded" alt="">
-              <% } else { %>
-                <img src="/images/placeholder.png" class="w-10 h-10 object-cover rounded" alt="">
-              <% } %>
-              <div>
-                <h5 class="text-sm leading-tight"><%= item.productId.name %></h5>
-                <p class="text-xs text-gray-500"><%= item.quantity %> x ₹<%= item.productId.price %></p>
-              </div>
-            </div>
-          <% }) %>
-          <div class="mt-2">
-            <h5 class="font-semibold">Subtotal: ₹<%= total.toFixed(2) %></h5>
-            <a href="/users/cart" class="text-blue-500 hover:underline text-sm">View Full Cart</a>
-          </div>
-        </div>
-      <% } else { %>
-        <p class="text-sm text-gray-500">Your cart is empty.</p>
-      <% } %>
-    </div>
-
-    <!-- Sort Section -->
-    <div class="flex items-center gap-2 mb-5">
-      <h3 class="font-medium">Sort by:</h3>
-      <form id="sortForm" action="/users/shop">
-        <select class="border-[1px] px-2 py-1 rounded" name="sortby" id="sortby">
-          <option value="popular">Popular</option>
-          <option value="newest">Newest</option>
-          <option value="price-low-high">Price: Low to High</option>
-          <option value="price-high-low">Price: High to Low</option>
-        </select>
-      </form>
-    </div>
-
-    <!-- Categories Section -->
-    <div class="flex flex-col mt-10">
-      <h4 class="font-semibold mb-2">Categories</h4>
-      <a class="block w-fit mb-2" href="/users/shop?filter=new">New Collection</a>
-      <a class="block w-fit mb-2" href="/users/shop">All Products</a>
-      <a class="block w-fit mb-2" href="/users/shop?filter=discounted">Discounted Products</a>
+  <!-- Sidebar -->
+  <div class="w-[25%] sidebar">
+    <div class="category-box">
+      <h4 class="font-semibold mb-3">📂 Categories</h4>
+      <a href="/users/shop?filter=new">New Collection</a>
+      <a href="/users/shop">All Products</a>
+      <a href="/users/shop?filter=discounted">Discounted</a>
+      <a href="/users/shop?filter=trending">Trending Now</a>
+      <a href="/users/shop?filter=limited">Limited Edition</a>
     </div>
   </div>
 
   <!-- Products Section -->
-  <div class="w-[75%] pl-10">
-    <div class="flex flex-wrap items-start gap-5">
-      <% products.forEach(function(product){ %>
-        <div class="w-72 bg-white rounded-xl overflow-hidden shadow-sm">
-          <div class="w-full h-52 flex items-center justify-center bg-[<%= product.bgcolor || '#F0F0F0' %>]">
-            <% if (product.image) { %>
-              <img class="h-[12rem] object-cover" src="data:image/jpeg;base64,<%= product.image.toString('base64') %>" alt="<%= product.name %>">
-            <% } else { %>
-              <img class="h-[12rem] object-cover" src="/images/placeholder.png" alt="No image available">
-            <% } %>
+  <div class="w-[75%] pl-10 products flex flex-wrap gap-6">
+    <% products.forEach(function(product){ %>
+      <div class="product-card" onclick="window.location.href='/users/product/<%= product._id %>'">
+        <% if (product.image) { %>
+          <img src="data:image/jpeg;base64,<%= product.image.toString('base64') %>" alt="<%= product.name %>">
+        <% } else { %>
+          <img src="/images/placeholder.png" alt="No image available">
+        <% } %>
+        <div class="product-info">
+          <div>
+            <h3><%= product.name %></h3>
+            <h4>₹ <%= product.price %></h4>
           </div>
-          <div class="flex justify-between items-center px-4 py-4 bg-[<%= product.panelcolor || '#FFFFFF' %>] text-[<%= product.textcolor || '#000000' %>]">
-            <div>
-              <h3 class="font-semibold"><%= product.name %></h3>
-              <h4>₹ <%= product.price %></h4>
-            </div>
-            <a class="w-8 h-8 flex items-center justify-center rounded-full bg-black text-white hover:bg-gray-800 transition" href="/users/cart/add/<%= product._id %>">
-              <i class="ri-add-line"></i>
-            </a>
-          </div>
+          <a class="add-btn" href="/users/cart/add/<%= product._id %>">
+            <i class="ri-add-line"></i>
+          </a>
         </div>
-      <% }) %>
-    </div>
+      </div>
+    <% }) %>
   </div>
 </div>
-
-<script>
-  document.getElementById('sortby').addEventListener('change', function() {
-    document.getElementById('sortForm').submit();
-  });
-</script>
 
 <%- include('./partials/footer') %>
